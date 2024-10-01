@@ -8,9 +8,13 @@
 </head>
 <body>
   <div id="game"></div>
-  <script src="https://unpkg.com/preact@10.5.13/dist/preact.umd.js"></script>
-  <script src="https://unpkg.com/preact@10.5.13/hooks/dist/hooks.umd.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script type="text/babel" src="main.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script type="module">
+    import * as preact from 'https://cdn.skypack.dev/preact';
+    import * as hooks from 'https://cdn.skypack.dev/preact/hooks';
+    window.preact = preact;
+    window.preactHooks = hooks;
+  </script>
+  <script type="text/babel" data-type="module" src="main.js"></script>
 </body>
 </html>
