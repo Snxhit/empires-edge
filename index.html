@@ -9,10 +9,27 @@
 <body>
   <div id="game"></div>
 
-  <!-- Preact from CDN -->
-  <script src="https://unpkg.com/preact@latest/dist/preact.min.js"></script>
-  <script src="https://unpkg.com/preact/hooks@latest/dist/hooks.umd.js"></script>
+  <!-- Preact from ESM.sh -->
+  <script type="module">
+    import { h, render } from 'https://esm.sh/preact';
+    import { useState } from 'https://esm.sh/preact/hooks';
 
-  <script src="main.js"></script>
+    function Game() {
+      const [count, setCount] = useState(0);
+      const handleClick = () => setCount(count + 1);
+
+      return (
+        <div>
+          <h1>Tester Counter</h1>
+          <p>Current Count: {count}</p>
+          <button onClick={handleClick}>Increment!</button>
+        </div>
+      );
+    }
+
+    render(<Game />, document.getElementById('game'));
+  </script>
+
+  <script src="style.css"></script>
 </body>
 </html>
