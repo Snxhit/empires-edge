@@ -9,7 +9,9 @@ function Game() {
     <div>
       <h1>Tester Counter</h1>
       <p>Current Count: {count}</p>
-      <button onClick={handleClick}Increment!</button>
+      <button onClick={handleClick}>Increment!</button>
     </div>
   );
 }
+
+render(<Game />, document.getElementById('game'));
