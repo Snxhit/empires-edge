@@ -1,5 +1,5 @@
-const { h, render } = preact;
-const { useState } = preactHooks;
+const { h, render } = window.preact;
+const { useState } = window.preactHooks;
 
 function Game() {
   const [count, setCount] = useState(0);
