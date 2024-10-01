@@ -1,16 +1,17 @@
-import { h, render } from 'https://esm.sh/preact';
-import { useState } from 'https://esm.sh/preact/hooks';
+const { h, render } = preact;
+const { useState } = preactHooks;
 
 function Game() {
   const [count, setCount] = useState(0);
   const handleClick = () => setCount(count + 1);
+  
   return (
-    h('div', null, [
-      h('h1', null, 'Tester Counter'),
-      h('p', null, `Current Count: ${count}`),
-      h('button', { onClick: handleClick }, 'Increment!')
-    ])
+    <div>
+      <h1>Tester Counter</h1>
+      <p>Current Count: {count}</p>
+      <button onClick={handleClick}>Increment!</button>
+    </div>
   );
 }
 
-render(h(Game), document.getElementById('game'));
+render(<Game />, document.getElementById('game'));
