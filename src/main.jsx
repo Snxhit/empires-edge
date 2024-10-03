@@ -1,10 +1,10 @@
-const { h, render } = window.preact;
-const { useState } = window.preactHooks;
+import { h, render } from 'preact';
+import { useState } from 'preact/hooks';
 
 function Game() {
   const [count, setCount] = useState(0);
   const handleClick = () => setCount(count + 1);
-  
+
   return (
     <div>
       <h1>Tester Counter</h1>
