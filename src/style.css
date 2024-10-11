@@ -1,11 +1,38 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    text-align: center;
-    padding: 50px;
+.parentContainer {
+    display: flex;
+    flex: 1;
+    overflow-x: hidden;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
+.sidePanel {
+    height: 100%;
+    width: 25%;
+    background-color: pink;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 60px;
+    overflow-wrap: break-word;
+    flex-direction: column;
+    white-space: normal;
+    display: flex;
+}
+.sidePanel::-webkit-scrollbar {
+    width: 9px;
+}
+.sidePanel::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+    border-radius: 20px;
+}
+.sidePanel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+}
+.sidePanel::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+}
+/* For Firefox */
+.sidePanel {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
 }

@@ -1,60 +1,70 @@
 import { render } from 'preact';
 import { useState } from 'preact/hooks';
 import './style.css';
-import { app, database } from './firebase';
-import { getDatabase, ref, set, get } from 'firebase/database';
+import { supabase } from './database';
 
 function Game() {
-  // Click count state
   const [count, setCount] = useState(0);
-  // Firebase database reference
-  const db = getDatabase(app);
   const [username, setUsername] = useState('');
   const [statusMsg, setStatusMsg] = useState('');
 
-  // Function to handle click
   const handleClick = async () => {
-    // Increment locally
-    setCount(prevCount => prevCount + 1);
+    if (!username) {
+      setStatusMsg('Please enter a username first.');
+      return;
+    }
 
-    // Update count in database
-    if (username) {
-      const userRef = ref(db, `users/${username}`);
-      await set(userRef, { clicks: count + 1 });
+    const newCount = count + 1;
+    setCount(newCount);
+
+    const { error } = await supabase
+      .from('users')
+      .update({ clicks: newCount })
+      .eq('username', username);
+
+    if (error) {
+      console.error('Error updating clicks:', error);
+      setStatusMsg('Failed to update click count. Please try again.');
     }
   };
 
-  // Function to handle username submission
-  const usernameSubmit = async (event) => {
+  const handleUsernameSubmit = async (event) => {
     event.preventDefault();
-    const userInput = document.getElementById('username').value;
-    setUsername(userInput);
+    const userInput = event.target.username.value.trim();
+    
+    if (!userInput) {
+      setStatusMsg('Please enter a valid username.');
+      return;
+    }
 
-    const userRef = ref(db, `users/${userInput}`);
-    const userData = await get(userRef);
+    const { data, error } = await supabase
+      .from('users')
+      .upsert({ username: userInput, clicks: 0 }, { onConflict: 'username' })
+      .select()
+      .single();
 
-    if (userData.exists()) {
-      const data = userData.val();
-      setCount(data.clicks);
-      setStatusMsg(`Welcome back ${userInput}, you are resuming from ${data.clicks} clicks!`);
+    if (error) {
+      console.error('Error creating/fetching user:', error);
+      setStatusMsg('An error occurred. Please try again.');
     } else {
-      setCount(0);
-      setStatusMsg(`Welcome to Empire's Edge, ${userInput}!`);
+      setUsername(userInput);
+      setCount(data.clicks);
+      setStatusMsg(`Welcome, ${userInput}! You have ${data.clicks} clicks.`);
     }
   };
 
   return (
-    <div>
-      <h1>Tester Counter</h1>
-      <p>Current Count: {count}</p>
-      <button onClick={handleClick}>Increment!</button>
-      <form id="usernameForm" onSubmit={usernameSubmit}>
-        <input type="text" id="username" placeholder="Identify yourself" />
-        <button type="submit">
-          Submit
-        </button>
+    <div className="parentContainer">
+      <div className="sidePanel">
+        {/* Add your UI components here */}
+      </div>
+      <form onSubmit={handleUsernameSubmit}>
+        <input type="text" id="username" name="username" placeholder="Enter your username" required />
+        <button type="submit">Submit</button>
       </form>
-      <p id="status">{statusMsg}</p>
+      <button onClick={handleClick}>Click Me!</button>
+      <p>{statusMsg}</p>
+      <p>Click Count: {count}</p>
     </div>
   );
 }
