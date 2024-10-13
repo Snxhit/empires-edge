@@ -13,15 +13,12 @@ function Game() {
       setStatusMsg('Please enter a username first.');
       return;
     }
-
     const newCount = count + 1;
     setCount(newCount);
-
     const { error } = await supabase
       .from('users')
       .update({ clicks: newCount })
       .eq('username', username);
-
     if (error) {
       console.error('Error updating clicks:', error);
       setStatusMsg('Failed to update click count. Please try again.');
@@ -37,19 +34,40 @@ function Game() {
       return;
     }
 
-    const { data, error } = await supabase
+    // First, try to fetch the existing user
+    const { data: existingUser, error: fetchError } = await supabase
       .from('users')
-      .upsert({ username: userInput, clicks: 0 }, { onConflict: 'username' })
-      .select()
+      .select('clicks')
+      .eq('username', userInput)
       .single();
 
-    if (error) {
-      console.error('Error creating/fetching user:', error);
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      console.error('Error fetching user:', fetchError);
       setStatusMsg('An error occurred. Please try again.');
-    } else {
+      return;
+    }
+
+    if (existingUser) {
+      // User exists, update the local state
       setUsername(userInput);
-      setCount(data.clicks);
-      setStatusMsg(`Welcome, ${userInput}! You have ${data.clicks} clicks.`);
+      setCount(existingUser.clicks);
+      setStatusMsg(`Welcome back, ${userInput}! You have ${existingUser.clicks} clicks.`);
+    } else {
+      // User doesn't exist, create a new one
+      const { data: newUser, error: insertError } = await supabase
+        .from('users')
+        .insert({ username: userInput, clicks: 0 })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error creating user:', insertError);
+        setStatusMsg('An error occurred. Please try again.');
+      } else {
+        setUsername(userInput);
+        setCount(0);
+        setStatusMsg(`Welcome, ${userInput}! You're starting with 0 clicks.`);
+      }
     }
   };
 
