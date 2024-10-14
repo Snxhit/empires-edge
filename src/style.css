@@ -36,3 +36,22 @@
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
 }
+
+
+input[type="password"] {
+    display: block; /* Ensures it's visible */
+    width: 100%; /* Adjust width as needed */
+    padding: 8px;
+    margin-top: 10px;
+  }
+
+form {
+  width: 100%; /* Make the form take full width */
+  padding: 10px;
+}
+
+input {
+  display: block; /* Ensure inputs are block elements */
+  width: 100%; /* Make sure they take full width */
+  margin-bottom: 10px; /* Add space between inputs */
+}

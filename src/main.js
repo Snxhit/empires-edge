@@ -1,7 +1,7 @@
 import { render } from 'preact';
 import { useState } from 'preact/hooks';
 import './style.css';
-import { supabase } from './database';
+import { database } from './database';
 
 function Game() {
   const [count, setCount] = useState(0);
@@ -15,7 +15,7 @@ function Game() {
     }
     const newCount = count + 1;
     setCount(newCount);
-    const { error } = await supabase
+    const { error } = await database
       .from('users')
       .update({ clicks: newCount })
       .eq('username', username);
@@ -27,6 +27,12 @@ function Game() {
 
   const handleUsernameSubmit = async (event) => {
     event.preventDefault();
+    const name = event.target.username.value.trim();
+    const password = event.target.password.value.trim();
+    console.log(name, password)
+  }
+ /* const handleUsernameSubmit = async (event) => {
+    event.preventDefault();
     const userInput = event.target.username.value.trim();
     
     if (!userInput) {
@@ -35,7 +41,7 @@ function Game() {
     }
 
     // First, try to fetch the existing user
-    const { data: existingUser, error: fetchError } = await supabase
+    const { data: existingUser, error: fetchError } = await database
       .from('users')
       .select('clicks')
       .eq('username', userInput)
@@ -54,7 +60,7 @@ function Game() {
       setStatusMsg(`Welcome back, ${userInput}! You have ${existingUser.clicks} clicks.`);
     } else {
       // User doesn't exist, create a new one
-      const { data: newUser, error: insertError } = await supabase
+      const { data: newUser, error: insertError } = await database
         .from('users')
         .insert({ username: userInput, clicks: 0 })
         .select()
@@ -69,15 +75,15 @@ function Game() {
         setStatusMsg(`Welcome, ${userInput}! You're starting with 0 clicks.`);
       }
     }
-  };
+  }; */
 
   return (
     <div className="parentContainer">
       <div className="sidePanel">
-        {/* Add your UI components here */}
       </div>
       <form onSubmit={handleUsernameSubmit}>
         <input type="text" id="username" name="username" placeholder="Enter your username" required />
+        <input type="password" id="password" name="pass" placeholder="Please enter a password" required />
         <button type="submit">Submit</button>
       </form>
       <button onClick={handleClick}>Click Me!</button>
