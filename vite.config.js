@@ -20,7 +20,7 @@ export default defineConfig({
   },
   server: {
     watch: {
-      usePolling: true, // Enable polling to check for file changes
+      usePolling: true,
     },
   },
 });
